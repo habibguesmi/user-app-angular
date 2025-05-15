@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { v4 as uuidv4 } from 'uuid';
 import { addUser } from '../../store/user.actions';
@@ -10,9 +10,9 @@ import { User } from '../../models/user.model';
   templateUrl: './add-user.component.html'
 })
 export class AddUserComponent {
-  userForm: FormGroup;
+  userForm: UntypedFormGroup;
 
-  constructor(private fb: FormBuilder, private store: Store) {
+  constructor(private fb: UntypedFormBuilder, private store: Store) {
     this.userForm = this.fb.group({
       nom: [''],
       pseudo: [''],
