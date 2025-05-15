@@ -1,0 +1,15 @@
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+  <input formControlName="nom" placeholder="Nom" />
+  <input formControlName="pseudo" placeholder="Pseudo" />
+
+  <label>
+    <input type="radio" formControlName="statut" value="premium" /> Premium
+  </label>
+  <label>
+    <input type="radio" formControlName="statut" value="standard" /> Standard
+  </label>
+
+  <input formControlName="budget" type="number" placeholder="Budget" />
+
+  <button type="submit">Ajouter</button>
+</form>

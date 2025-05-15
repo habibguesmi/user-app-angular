@@ -1,0 +1,11 @@
+<div *ngIf="users$ | async as users">
+  <h2>Liste des utilisateurs</h2>
+  <div *ngFor="let user of users">
+    <p>
+      <strong>{{ user.nom }}</strong> ({{ user.pseudo }})<br />
+      Statut : {{ user.statut }}<br />
+      Budget : {{ user.budget }} TND
+    </p>
+    <hr />
+  </div>
+</div>
