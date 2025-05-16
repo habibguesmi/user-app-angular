@@ -1,3 +1,33 @@
-<button routerLink="/about">Qui sommes-nous</button>
-<button routerLink="/add-user">Ajouter un utilisateur</button>
-<button routerLink="/user-list">Liste des utilisateurs</button>
+<!-- home.component.html -->
+<div class="home-container" style="text-align: center; margin-top: 50px">
+  <h1>Accueil</h1>
+  <div
+    class="button-group"
+    style="
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 300px;
+      margin: 0 auto;
+    "
+  >
+    <button
+      (click)="goTo('about')"
+      style="padding: 20px; font-size: 1.2rem; cursor: pointer"
+    >
+      ➤ Qui sommes-nous
+    </button>
+    <button
+      (click)="goTo('add-user')"
+      style="padding: 20px; font-size: 1.2rem; cursor: pointer"
+    >
+      ➤ Ajouter un utilisateur
+    </button>
+    <button
+      (click)="goTo('user-list')"
+      style="padding: 20px; font-size: 1.2rem; cursor: pointer"
+    >
+      ➤ Liste des utilisateurs
+    </button>
+  </div>
+</div>
