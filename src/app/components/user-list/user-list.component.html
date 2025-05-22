@@ -1,11 +1,57 @@
-<div *ngIf="users$ | async as users">
-  <h2>Liste des utilisateurs</h2>
-  <div *ngFor="let user of users">
-    <p>
-      <strong>{{ user.nom }}</strong> ({{ user.pseudo }})<br />
-      Statut : {{ user.statut }}<br />
-      Budget : {{ user.budget }} TND
-    </p>
-    <hr />
+<ng-container *ngIf="users$ | async as users">
+  <div *ngIf="users.length > 0" class="user-list-container">
+    <div class="head-liste">
+      <div><h2>👥 Liste des utilisateurs</h2></div>
+      <div
+        class="filters"
+        style="display: flex; gap: 10px; margin-bottom: 20px"
+      >
+        <input
+          type="text"
+          placeholder="🔍 Rechercher par nom"
+          [(ngModel)]="searchTerm"
+          class="search-input"
+          style="padding: 10px; flex: 1"
+        />
+
+        <mat-select
+          [(ngModel)]="selectedStatus"
+          style="padding: 10px; width: 100px"
+        >
+          <mat-option value="all">Statuts</mat-option>
+          <mat-option value="standard">Standard</mat-option>
+          <mat-option value="premium">Premium</mat-option>
+        </mat-select>
+        <button
+          mat-raised-button
+          (click)="resetFilters()"
+          style="padding: 10px; background-color: #eee; border-radius: 6px"
+        >
+          🔄 Réinitialiser
+        </button>
+      </div>
+    </div>
+    <div *ngFor="let user of filteredUsers(users$ | async)" class="user-card">
+      <div class="user-info">
+        <div class="icon">🧍‍♂️</div>
+        <div>
+          <p>
+            <strong>{{ user.nom }}</strong>
+            <span class="pseudo">({{ user.pseudo }})</span>
+          </p>
+          <p>
+            ⭐ Statut : <span class="statut">{{ user.statut }}</span>
+          </p>
+          <p>
+            💰 Budget : <span class="budget">{{ user.budget }} TND</span>
+          </p>
+        </div>
+      </div>
+      <button class="delete-btn" (click)="remove(user.id)">🗑️ Supprimer</button>
+    </div>
   </div>
-</div>
+  <!-- Toast simple -->
+  <div class="toast" *ngIf="showToast">
+    {{ toastMessage }}
+  </div>
+</ng-container>

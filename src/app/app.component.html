@@ -1,1 +1,28 @@
-<router-outlet></router-outlet>
+<div class="main-layout">
+  <nav class="sidebar" [class.open]="menuOpen" *ngIf="!isHomePage">
+    <h3 class="nav-title">Menu</h3>
+    <ul (click)="closeMenu()">
+      <li><a routerLink="/">➤ Accueil</a></li>
+      <li>
+        <a routerLink="/about">➤ Qui sommes-nous</a>
+      </li>
+      <li>
+        <a routerLink="/add-user">➤ Ajouter un utilisateur</a>
+      </li>
+      <li>
+        <a routerLink="/user-list">➤ Liste des utilisateurs</a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="content">
+    <button class="menu-toggle" (click)="toggleMenu()" *ngIf="!isHomePage">
+      ☰
+    </button>
+    <app-home
+      (closeMenuEvent)="closeMenu()"
+      *ngIf="currentRoute === '/'"
+    ></app-home>
+    <router-outlet *ngIf="currentRoute !== '/'"></router-outlet>
+  </div>
+</div>

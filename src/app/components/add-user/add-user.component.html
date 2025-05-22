@@ -1,15 +1,42 @@
-<form [formGroup]="userForm" (ngSubmit)="onSubmit()">
-  <input formControlName="nom" placeholder="Nom" />
-  <input formControlName="pseudo" placeholder="Pseudo" />
+<div class="add-user-container">
+  <h2>Ajouter un utilisateur</h2>
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <input formControlName="nom" type="text" placeholder="Nom" />
+    <div
+      *ngIf="userForm.get('nom')?.invalid && userForm.get('nom')?.touched"
+      class="error-message"
+    >
+      ⚠️ Le nom est requis.
+    </div>
 
-  <label>
-    <input type="radio" formControlName="statut" value="premium" /> Premium
-  </label>
-  <label>
-    <input type="radio" formControlName="statut" value="standard" /> Standard
-  </label>
+    <input formControlName="pseudo" type="text" placeholder="Pseudo" />
+    <div
+      *ngIf="userForm.get('pseudo')?.invalid && userForm.get('pseudo')?.touched"
+      class="error-message"
+    >
+      ⚠️ Le pseudo est requis.
+    </div>
+    <div *ngIf="pseudoDejaPris" class="error-message">
+      ⚠️ Ce pseudo existe déjà.
+    </div>
 
-  <input formControlName="budget" type="number" placeholder="Budget" />
+    <div class="radio-group">
+      <label>
+        <input type="radio" formControlName="statut" value="premium" />
+        Premium
+      </label>
+      <label>
+        <input type="radio" formControlName="statut" value="standard" />
+        Standard
+      </label>
+    </div>
 
-  <button type="submit">Ajouter</button>
-</form>
+    <input formControlName="budget" type="number" placeholder="Budget (TND)" />
+
+    <button type="submit">➕ Ajouter</button>
+  </form>
+</div>
+<!-- Toast simple -->
+<div class="toast" *ngIf="showToast">
+  {{ toastMessage }}
+</div>
