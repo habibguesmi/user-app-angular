@@ -1,7 +1,7 @@
 <div class="add-user-container">
   <h2>Ajouter un utilisateur</h2>
   <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
-    <input formControlName="nom" type="text" placeholder="Nom" />
+    <input formControlName="nom" type="text" placeholder="Nom" required />
     <div
       *ngIf="userForm.get('nom')?.invalid && userForm.get('nom')?.touched"
       class="error-message"
@@ -9,7 +9,7 @@
       ⚠️ Le nom est requis.
     </div>
 
-    <input formControlName="pseudo" type="text" placeholder="Pseudo" />
+    <input formControlName="pseudo" type="text" placeholder="Pseudo" required />
     <div
       *ngIf="userForm.get('pseudo')?.invalid && userForm.get('pseudo')?.touched"
       class="error-message"
@@ -26,17 +26,24 @@
         Premium
       </label>
       <label>
-        <input type="radio" formControlName="statut" value="standard" />
+        <input type="radio" formControlName="statut" value="standard" checked />
         Standard
       </label>
     </div>
 
-    <input formControlName="budget" type="number" placeholder="Budget (TND)" />
+    <input
+      formControlName="budget"
+      type="number"
+      placeholder="Budget (TND)"
+      required
+    />
+    <div
+      *ngIf="userForm.get('budget')?.invalid && userForm.get('budget')?.touched"
+      class="error-message"
+    >
+      ⚠️ Le budget doit être un nombre positif.
+    </div>
 
     <button type="submit">➕ Ajouter</button>
   </form>
-</div>
-<!-- Toast simple -->
-<div class="toast" *ngIf="showToast">
-  {{ toastMessage }}
 </div>

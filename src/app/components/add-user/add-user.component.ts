@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup,Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { v4 as uuidv4 } from 'uuid';
 import { addUser } from '../../store/user.actions';
@@ -7,19 +7,19 @@ import { User } from '../../models/user.model';
 import { selectAllUsers } from '../../store/user.selectors';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
+import { Observable, firstValueFrom } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { loadUsers } from '../../store/user.actions';
+import { BackendUser } from '../../shared/backend-user/backend-user';
 @Component({
   selector: 'app-add-user',
   templateUrl: './add-user.component.html',
-  styleUrls: ['./add-user.component.scss'] 
+  styleUrls: ['./add-user.component.scss'],
 })
 export class AddUserComponent {
   userForm: FormGroup;
-  users: User[] = [];
+  users$: Observable<User[]>;
   pseudoDejaPris = false;
-  submitted = false;
-  showToast = false;
-  toastMessage = '';
 
   constructor(
     private fb: FormBuilder,
@@ -27,61 +27,79 @@ export class AddUserComponent {
     private router: Router,
     private snackBar: MatSnackBar,
   ) {
+    // Initialisation du formulaire
     this.userForm = this.fb.group({
       nom: ['', Validators.required],
       pseudo: ['', Validators.required],
       statut: ['standard', Validators.required],
-      budget: [0, [Validators.required, Validators.min(0)]]
+      budget: [0, [Validators.required, Validators.min(0)]],
     });
-    // Récupère la liste actuelle des utilisateurs
-    this.store.select(selectAllUsers).subscribe(users => {
-      this.users = users;
-    });
+    this.store.dispatch(loadUsers());
+    // Transformation des utilisateurs backend → modèle frontend
+    this.users$ = this.store.select(selectAllUsers).pipe(
+      map((users: BackendUser[]) =>
+        users.map(user => ({
+          id: user.id,
+          nom: user.nom || user.name || '',
+          pseudo: user.pseudo || user.username || '',
+          statut: user.statut || user.status || 'standard',
+          budget: user.budget ?? 0,
+        }))
+      )
+    );
   }
-    
-  
 
-  onSubmit() {
-    this.submitted = true;
-    this.userForm.updateValueAndValidity();
-    this.userForm.markAllAsTouched(); // ⬅️ Active les erreurs partout
-
+  async onSubmit() {
+    this.userForm.markAllAsTouched();
   
     if (this.userForm.valid) {
       const formData = this.userForm.getRawValue();
-    
-      const enteredPseudo = this.userForm.get('pseudo')?.value.trim();
-
-      const pseudoExists = this.users.some(user => user.pseudo.toLowerCase() === enteredPseudo.toLowerCase());
+      const enteredPseudo = formData.pseudo?.trim().toLowerCase();
   
-      if (pseudoExists) {
+      if (!enteredPseudo) {
         this.pseudoDejaPris = true;
         return;
       }
+  
+      // Récupération asynchrone des users
+      const users = await firstValueFrom(this.users$);
+  
+      // Debug : affiche tous les pseudos
+      console.log('Pseudos existants:', users.map(u => u.pseudo.toLowerCase()));
+  
+      // Vérifie si pseudo déjà pris
+      const isTaken = users.some(user => user.pseudo.toLowerCase() === enteredPseudo);
+  
+      if (isTaken) {
+        this.pseudoDejaPris = true;
+        return;
+      }
+  
+      // Création utilisateur
       const newUser: User = {
         id: uuidv4(),
-        ...formData
+        nom: formData.nom,
+        pseudo: enteredPseudo,
+        statut: formData.statut,
+        budget: formData.budget,
       };
   
+      // Dispatch action ajout utilisateur
       this.store.dispatch(addUser({ user: newUser }));
   
-     
+      // Reset formulaire + état erreur
       this.userForm.reset({ statut: 'standard', budget: 0 });
       this.pseudoDejaPris = false;
-       // ✅ Affiche un toast de confirmation
-  this.snackBar.open('Utilisateur ajouté avec succès 🎉', 'Fermer', {
-    duration: 3000,
-    panelClass: ['custom-toast'],
-  });
-
-  // ✅ Redirige vers la liste
-  this.router.navigate(['/user-list']);
-      
-      
+  
+      // Message succès
+      this.snackBar.open('Utilisateur ajouté avec succès 🎉', 'Fermer', {
+        duration: 3000,
+        panelClass: ['custom-toast'],
+      });
+  
+      // Navigation
+      this.router.navigate(['/user-list']);
     }
-    
   }
-  
-  
   
 }

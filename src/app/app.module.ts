@@ -1,54 +1,60 @@
-// app.module.ts
+// src/app/app.module.ts
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AppRoutingModule } from './app-routing.module';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatCardModule } from '@angular/material/card';  // <-- Import MatCardModule
+
 import { AppComponent } from './app.component';
-import { HomeComponent } from './components/home/home.component';
 import { AddUserComponent } from './components/add-user/add-user.component';
 import { UserListComponent } from './components/user-list/user-list.component';
+import { HomeComponent } from './components/home/home.component';
 import { AboutComponent } from './components/about/about.component';
 
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { MatDialogModule } from '@angular/material/dialog';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatButtonModule } from '@angular/material/button';
-import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.component';
-import { MatIconModule } from '@angular/material/icon';
-import { MatCardModule } from '@angular/material/card';
-import { MatSelectModule } from '@angular/material/select';
-import { HttpClientModule } from '@angular/common/http';
-import { EffectsModule } from '@ngrx/effects';
+import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.component';  // <-- Import ConfirmDialogComponent
+
+import { AppRoutingModule } from './app-routing.module';
+
+import { userReducer } from './store/user.reducer';
 import { UserEffects } from './store/user.effects';
+import { MatDialogModule } from '@angular/material/dialog';
+import { FormsModule } from '@angular/forms';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
     AddUserComponent,
     UserListComponent,
+    HomeComponent,
     AboutComponent,
-    ConfirmDialogComponent,
+    ConfirmDialogComponent,  // <-- Déclaration
   ],
   imports: [
     BrowserModule,
     ReactiveFormsModule,
+    HttpClientModule,
     AppRoutingModule,
-    StoreDevtoolsModule.instrument({ maxAge: 25 }),
+    StoreModule.forRoot({ users: userReducer }),
+    EffectsModule.forRoot([UserEffects]),
     BrowserAnimationsModule,
-    MatDialogModule,
-    MatButtonModule,
-    MatIconModule,
+    MatSnackBarModule,
     MatCardModule,
+    MatDialogModule,
     FormsModule,
     MatSelectModule,
-    HttpClientModule,
-    EffectsModule.forRoot([UserEffects]),
+    MatButtonModule,
+
+
   ],
-  providers: [
-    provideAnimationsAsync()
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

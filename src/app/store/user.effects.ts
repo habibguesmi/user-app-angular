@@ -1,4 +1,3 @@
-// store/user.effects.ts
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import * as UserActions from './user.actions';

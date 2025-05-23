@@ -1,5 +1,5 @@
-<ng-container *ngIf="users$ | async as users">
-  <div *ngIf="users.length > 0" class="user-list-container">
+<ng-container *ngIf="filteredUsers$ | async as users">
+  <div class="user-list-container">
     <div class="head-liste">
       <div><h2>👥 Liste des utilisateurs</h2></div>
       <div
@@ -9,19 +9,22 @@
         <input
           type="text"
           placeholder="🔍 Rechercher par nom"
-          [(ngModel)]="searchTerm"
+          [ngModel]="searchTermSubject.value"
+          (ngModelChange)="onSearchTermChange($event)"
           class="search-input"
           style="padding: 10px; flex: 1"
         />
 
         <mat-select
-          [(ngModel)]="selectedStatus"
+          [value]="selectedStatusSubject.value"
+          (selectionChange)="onStatusChange($event.value)"
           style="padding: 10px; width: 100px"
         >
           <mat-option value="all">Statuts</mat-option>
           <mat-option value="standard">Standard</mat-option>
           <mat-option value="premium">Premium</mat-option>
         </mat-select>
+
         <button
           mat-raised-button
           (click)="resetFilters()"
@@ -31,7 +34,8 @@
         </button>
       </div>
     </div>
-    <div *ngFor="let user of filteredUsers(users$ | async)" class="user-card">
+
+    <div *ngFor="let user of users" class="user-card">
       <div class="user-info">
         <div class="icon">🧍‍♂️</div>
         <div>
@@ -50,7 +54,7 @@
       <button class="delete-btn" (click)="remove(user.id)">🗑️ Supprimer</button>
     </div>
   </div>
-  <!-- Toast simple -->
+
   <div class="toast" *ngIf="showToast">
     {{ toastMessage }}
   </div>

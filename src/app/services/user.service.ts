@@ -1,10 +1,11 @@
-// services/user.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { User } from '../models/user.model';
+import { Observable } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root',
+})
 export class UserService {
   private apiUrl = 'http://localhost:8080/api/users';
 
@@ -15,10 +16,16 @@ export class UserService {
   }
 
   addUser(user: User): Observable<User> {
-    return this.http.post<User>(this.apiUrl, user);
+    const userDTO = {
+      name: user.nom,
+      username: user.pseudo,
+      status: user.statut,
+      budget: user.budget,
+    };
+    return this.http.post<User>(this.apiUrl, userDTO);
   }
 
-  deleteUser(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  deleteUser(userId: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${userId}`);
   }
 }
