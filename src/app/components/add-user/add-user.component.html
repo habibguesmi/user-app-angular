@@ -30,13 +30,15 @@
         Standard
       </label>
     </div>
-
-    <input
-      formControlName="budget"
-      type="number"
-      placeholder="Budget (TND)"
-      required
-    />
+    <label>
+      <strong> Budget </strong>
+      <input
+        formControlName="budget"
+        type="number"
+        placeholder="Budget (TND)"
+        required
+      />
+    </label>
     <div
       *ngIf="userForm.get('budget')?.invalid && userForm.get('budget')?.touched"
       class="error-message"
