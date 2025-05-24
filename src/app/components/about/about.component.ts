@@ -11,7 +11,7 @@ export class AboutComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.imageUrl = "https://source.unsplash.com/400x300/?team,people";
+   
   }
 
 }
