@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class UserService {
-  private apiUrl = 'http://localhost:8080/api/users';
+  private apiUrl = 'https://userapi-5rvm.onrender.com/api/users';
 
   constructor(private http: HttpClient) {}
 
@@ -28,4 +28,15 @@ export class UserService {
   deleteUser(userId: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${userId}`);
   }
+  updateUser(user: User) {
+    const userDTO = {
+      name: user.nom,
+      username: user.pseudo,
+      status: user.statut,
+      budget: user.budget,
+    };
+    return this.http.put<User>(`${this.apiUrl}/${user.id}`, userDTO);
+    
+  }
+  
 }

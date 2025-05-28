@@ -1,5 +1,6 @@
 <div class="add-user-container">
-  <h2>Ajouter un utilisateur</h2>
+  <h2>{{ editMode ? "✏️ Modifier utilisateur" : "➕ Ajouter utilisateur" }}</h2>
+
   <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
     <input formControlName="nom" type="text" placeholder="Nom" required />
     <div
@@ -10,35 +11,43 @@
     </div>
 
     <input formControlName="pseudo" type="text" placeholder="Pseudo" required />
-    <div
-      *ngIf="userForm.get('pseudo')?.invalid && userForm.get('pseudo')?.touched"
-      class="error-message"
-    >
-      ⚠️ Le pseudo est requis.
-    </div>
     <div *ngIf="pseudoDejaPris" class="error-message">
       ⚠️ Ce pseudo existe déjà.
+    </div>
+    <div
+      *ngIf="userForm.get('pseudo')?.touched && userForm.get('pseudo')?.invalid"
+      class="error-message"
+    >
+      <ng-container *ngIf="userForm.get('pseudo')?.errors?.['required']">
+        ⚠️ Le pseudo est requis.
+      </ng-container>
+      <ng-container
+        *ngIf="!userForm.get('pseudo')?.errors?.['required'] && userForm.get('pseudo')?.errors?.['pattern']"
+      >
+        ⚠️ Le pseudo ne doit pas contenir d’espaces.
+      </ng-container>
     </div>
 
     <div class="radio-group">
       <label>
-        <input type="radio" formControlName="statut" value="premium" />
-        Premium
+        <input type="radio" formControlName="statut" value="premium" /> Premium
       </label>
       <label>
-        <input type="radio" formControlName="statut" value="standard" checked />
+        <input type="radio" formControlName="statut" value="standard" />
         Standard
       </label>
     </div>
-    <label>
-      <strong> Budget </strong>
+
+    <div class="form-group">
+      <label for="budget"><strong>Budget</strong></label>
       <input
+        id="budget"
         formControlName="budget"
         type="number"
         placeholder="Budget (TND)"
         required
       />
-    </label>
+    </div>
     <div
       *ngIf="userForm.get('budget')?.invalid && userForm.get('budget')?.touched"
       class="error-message"
@@ -46,6 +55,10 @@
       ⚠️ Le budget doit être un nombre positif.
     </div>
 
-    <button type="submit">➕ Ajouter</button>
+    <button type="submit">
+      {{
+        editMode ? "✏️ Enregistrer les modifications" : "➕ Ajouter utilisateur"
+      }}
+    </button>
   </form>
 </div>

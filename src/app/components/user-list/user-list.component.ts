@@ -10,6 +10,7 @@ import { loadUsers, deleteUser } from '../../store/user.actions';
 
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { BackendUser } from '../../shared/backend-user/backend-user';
+import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
@@ -24,9 +25,11 @@ export class UserListComponent implements OnInit {
 
   showToast = false;
   toastMessage = '';
+  editMode = false;
+  editedUserId: string | null = null;
   
 
-  constructor(private store: Store, private dialog: MatDialog) {
+  constructor(private store: Store, private dialog: MatDialog,  private router: Router,  private route: ActivatedRoute) {
    
     this.users$ = this.store.select(selectAllUsers).pipe(
       map((users: BackendUser[]) =>
@@ -58,9 +61,10 @@ export class UserListComponent implements OnInit {
     );
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.store.dispatch(loadUsers());
   }
+  
 
   onSearchTermChange(term: string) {
     this.searchTermSubject.next(term);
@@ -90,4 +94,9 @@ export class UserListComponent implements OnInit {
       }
     });
   }
+
+  edit(userId: string) {
+    this.router.navigate(['/edit-user', userId]);
+  }
+   
 }

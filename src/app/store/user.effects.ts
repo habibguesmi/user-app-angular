@@ -3,6 +3,8 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import * as UserActions from './user.actions';
 import { UserService } from '../services/user.service';
 import { catchError, map, mergeMap, of } from 'rxjs';
+import { mapBackendUserToUser } from '../shared/backend-user/backend-user.mapper';
+import { tap } from 'rxjs/operators';
 
 @Injectable()
 export class UserEffects {
@@ -13,8 +15,14 @@ export class UserEffects {
       ofType(UserActions.loadUsers),
       mergeMap(() =>
         this.userService.getUsers().pipe(
-          map(users => UserActions.loadUsersSuccess({ users })),
-          catchError(error => of(UserActions.loadUsersFailure({ error })))
+          map(users =>
+            UserActions.loadUsersSuccess({
+              users: users.map(mapBackendUserToUser)
+            })
+          ),
+          catchError(error =>
+            of(UserActions.loadUsersFailure({ error }))
+          )
         )
       )
     )
@@ -25,8 +33,14 @@ export class UserEffects {
       ofType(UserActions.addUser),
       mergeMap(({ user }) =>
         this.userService.addUser(user).pipe(
-          map(newUser => UserActions.addUserSuccess({ user: newUser })),
-          catchError(error => of(UserActions.addUserFailure({ error })))
+          map(newUser =>
+            UserActions.addUserSuccess({
+              user: mapBackendUserToUser(newUser)
+            })
+          ),
+          catchError(error =>
+            of(UserActions.addUserFailure({ error }))
+          )
         )
       )
     )
@@ -38,7 +52,28 @@ export class UserEffects {
       mergeMap(({ userId }) =>
         this.userService.deleteUser(userId).pipe(
           map(() => UserActions.deleteUserSuccess({ userId })),
-          catchError(error => of(UserActions.deleteUserFailure({ error })))
+          catchError(error =>
+            of(UserActions.deleteUserFailure({ error }))
+          )
+        )
+      )
+    )
+  );
+
+  updateUser$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(UserActions.updateUser),
+      mergeMap(({ user }) =>
+        this.userService.updateUser(user).pipe(
+          tap(updatedUser => console.log('Réponse backend updateUser:', updatedUser)), // <-- ici
+          map(updatedUser =>
+            UserActions.updateUserSuccess({
+              user: mapBackendUserToUser(updatedUser)
+            })
+          ),
+          catchError(error =>
+            of(UserActions.updateUserFailure({ error }))
+          )
         )
       )
     )

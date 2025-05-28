@@ -51,7 +51,13 @@
           </p>
         </div>
       </div>
-      <button class="delete-btn" (click)="remove(user.id)">🗑️ Supprimer</button>
+
+      <div class="user-actions">
+        <button class="edit-btn" (click)="edit(user.id)">✏️ Modifier</button>
+        <button class="delete-btn" (click)="remove(user.id)">
+          🗑️ Supprimer
+        </button>
+      </div>
     </div>
   </div>
 
