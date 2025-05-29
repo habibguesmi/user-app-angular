@@ -122,3 +122,41 @@ select {
     border-radius: 6px;
     border: 1px solid #ccc;
 }
+
+.filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px
+}
+
+.user-actions {
+    display: block;
+}
+
+// Responsive
+@media (max-width: 768px) {
+    .head-liste {
+        display: block;
+        align-content: center;
+        justify-content: space-between;
+    }
+    .filters {
+        display: block;
+        margin-bottom: 10px;
+        margin-top: 10px;
+    }
+    .user-card {
+        display: block;
+    }
+    .user-actions {
+        display: flex;
+        align-content: center;
+        gap: 10px;
+    }
+    .edit-btn {
+        flex-basis: 100%;
+    }
+    .delete-btn {
+        flex-basis: 100%;
+    }
+}
