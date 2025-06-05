@@ -22,7 +22,7 @@
         "@angular/platform-browser": "^16.2.0",
         "@angular/platform-browser-dynamic": "^16.2.0",
         "@angular/platform-server": "^16.2.0",
-        "@angular/router": "^16.2.0",
+        "@angular/router": "^16.2.12",
         "@ngrx/effects": "^16.2.0",
         "@ngrx/store": "^16.2.0",
         "@ngrx/store-devtools": "^16.2.0",
@@ -52,5 +52,4 @@
         "karma-jasmine-html-reporter": "~2.0.0",
         "typescript": "~5.1.6"
     }
-
 }
