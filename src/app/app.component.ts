@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -15,19 +14,22 @@ export class AppComponent {
   constructor(private router: Router) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        this.isHomePage = event.url === '/' || event.urlAfterRedirects === '/';
+        this.currentRoute = event.urlAfterRedirects;
+        this.isHomePage = this.currentRoute === '/';
         if (!this.isHomePage) {
-          this.menuOpen = false; // Fermer menu automatiquement si on quitte la home
+          this.menuOpen = false;
         }
       }
     });
   }
- 
 
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
   }
+
   closeMenu() {
-    if (this.menuOpen) this.menuOpen = false;
+    if (this.menuOpen) {
+      this.menuOpen = false;
+    }
   }
 }

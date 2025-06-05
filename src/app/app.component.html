@@ -1,29 +1,46 @@
 <div class="main-layout">
+  <!-- Sidebar -->
   <nav class="sidebar" [class.open]="menuOpen" *ngIf="!isHomePage">
     <h3 class="nav-title">Menu</h3>
     <ul (click)="closeMenu()">
       <li><a routerLink="/">➤ Accueil</a></li>
-      <li>
-        <a routerLink="/about">➤ Qui sommes-nous</a>
-      </li>
-      <li>
-        <a routerLink="/add-user">➤ Ajouter un utilisateur</a>
-      </li>
-      <li>
-        <a routerLink="/user-list">➤ Liste des utilisateurs</a>
-      </li>
+      <li><a routerLink="/about">➤ Qui sommes-nous</a></li>
+      <li><a routerLink="/add-user">➤ Ajouter un utilisateur</a></li>
+      <li><a routerLink="/user-list">➤ Liste des utilisateurs</a></li>
     </ul>
   </nav>
 
+  <!-- Overlay (mobile) -->
+  <div
+    class="overlay"
+    *ngIf="menuOpen && !isHomePage"
+    (click)="closeMenu()"
+  ></div>
+
+  <!-- Content -->
   <div class="content">
-    <button class="menu-toggle" (click)="toggleMenu()" *ngIf="!isHomePage">
-      ☰
+    <!-- Menu Hamburger -->
+    <button
+      class="menu-toggle"
+      [ngClass]="{ 'move-right': menuOpen }"
+      (click)="toggleMenu()"
+      *ngIf="!isHomePage"
+    >
+      <div class="burger" [class.open]="menuOpen">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
     </button>
+
+    <!-- Home or routed content -->
     <app-home
       (closeMenuEvent)="closeMenu()"
       *ngIf="currentRoute === '/'"
     ></app-home>
+
     <router-outlet *ngIf="currentRoute !== '/'"></router-outlet>
   </div>
 </div>
+
 <app-visitor-counter></app-visitor-counter>
