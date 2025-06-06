@@ -9,6 +9,7 @@ import { User } from '../../models/user.model';
 import { BackendUser } from '../../shared/backend-user/backend-user';
 import { mapBackendUserToUser } from '../../shared/backend-user/backend-user.mapper';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Meta, Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-add-user',
@@ -28,10 +29,32 @@ export class AddUserComponent implements OnInit {
     private store: Store,
     private route: ActivatedRoute,
     private router: Router,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private title: Title,
+    private meta: Meta
   ) {}
-
+  
   ngOnInit() {
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.editMode = true;
+      this.editedUserId = id;
+    }
+    if (this.editMode) {
+      this.title.setTitle('Modifier un utilisateur | Application Gestion Utilisateurs');
+      this.meta.updateTag({
+        name: 'description',
+        content: 'Modifier des utilisateurs.'
+      });
+    }
+    else {
+      this.title.setTitle('Ajouter un utilisateur | Application Gestion Utilisateurs');
+      this.meta.updateTag({
+        name: 'description',
+        content: 'Ajouter des utilisateurs.'
+      });
+      
+    }
     this.store.dispatch(loadUsers());
 
     this.userForm = this.fb.group({
@@ -46,13 +69,6 @@ export class AddUserComponent implements OnInit {
       statut: ['standard', Validators.required],
       budget: [0, [Validators.required, Validators.min(0)]]
     });
-    
-
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.editMode = true;
-      this.editedUserId = id;
-    }
 
     this.store.select(selectAllUsers).subscribe((backendUsers: BackendUser[]) => {
       this.allUsers = backendUsers.map(mapBackendUserToUser);

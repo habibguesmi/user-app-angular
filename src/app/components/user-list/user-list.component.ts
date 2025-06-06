@@ -10,7 +10,8 @@ import { loadUsers, deleteUser } from '../../store/user.actions';
 
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { BackendUser } from '../../shared/backend-user/backend-user';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
+import { Meta, Title } from '@angular/platform-browser';
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
@@ -29,8 +30,14 @@ export class UserListComponent implements OnInit {
   editedUserId: string | null = null;
   
 
-  constructor(private store: Store, private dialog: MatDialog,  private router: Router,  private route: ActivatedRoute) {
-   
+  constructor(
+    private store: Store,
+    private dialog: MatDialog,
+    private router: Router,
+    private title: Title,
+    private meta: Meta
+  ) {
+           
     this.users$ = this.store.select(selectAllUsers).pipe(
       map((users: BackendUser[]) =>
         users.map(user => ({
@@ -62,6 +69,11 @@ export class UserListComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.title.setTitle('Liste des utilisateurs | Application Gestion Utilisateurs');
+    this.meta.updateTag({
+      name: 'description',
+      content: 'Liste des utilisateurs.'
+    });
     this.store.dispatch(loadUsers());
   }
   
