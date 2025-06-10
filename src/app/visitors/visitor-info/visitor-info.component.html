@@ -2,8 +2,13 @@
   <h3>🌍 Détails des visiteurs</h3>
   <p *ngIf="!visitors.length">Aucun visiteur connecté.</p>
   <ul *ngIf="visitors.length">
-    <li *ngFor="let v of visitors">
-      IP: {{ v.ip }} — {{ v.city }}, {{ v.country }}
+    <li *ngFor="let v of visitors; let i = index">
+      {{ i + 1 }} - IP: {{ v.ip }} —
+      {{
+        v.city === "Inconnu" && v.country === "Inconnu"
+          ? "Localisation inconnue"
+          : v.city + ", " + v.country
+      }}
     </li>
   </ul>
 </div>
