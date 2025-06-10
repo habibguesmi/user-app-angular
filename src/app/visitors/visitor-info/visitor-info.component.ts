@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import * as SockJS from 'sockjs-client';
 
 @Component({
   selector: 'app-visitor-info',
@@ -7,6 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class VisitorInfoComponent implements OnInit {
   visitors: { ip: string; city: string; country: string }[] = [];
+  visitorCount = 0;
 
   ngOnInit(): void {
     const stored = localStorage.getItem('visitors');
@@ -18,27 +20,27 @@ export class VisitorInfoComponent implements OnInit {
       }
     }
 
-    // Ajout du visiteur actuel
     if (typeof window !== 'undefined') {
-      fetch('https://ipapi.co/json/')
-        .then(res => res.json())
-        .then(data => {
-          const visitor = {
-            ip: data.ip,
-            city: data.city || 'Inconnu',
-            country: data.country_name || 'Inconnu'
-          };
+      const isLocalhost = window.location.hostname === 'localhost';
+      const socketUrl = isLocalhost
+        ? 'http://localhost:8080/ws/visitors'
+        : 'https://userapi-5rvm.onrender.com/ws/visitors';
 
-          // Évite les doublons d'IP
-          const exists = this.visitors.some(v => v.ip === visitor.ip);
-          if (!exists) {
-            this.visitors.push(visitor);
-            localStorage.setItem('visitors', JSON.stringify(this.visitors));
-          }
-        })
-        .catch(error => {
-          console.error('Erreur lors de la récupération des données IP:', error);
-        });
+      const sock = new SockJS(socketUrl);
+
+      sock.onopen = () => console.log('✅ WebSocket connected');
+      sock.onmessage = (event: MessageEvent) => {
+        const data = JSON.parse(event.data);
+        this.visitorCount = data.count;
+
+        // Exclure IPv6 par exemple
+        this.visitors = data.visitors.filter((v: { ip: string }) => !v.ip.includes(':'));
+
+        this.visitors = data.visitors;
+
+        localStorage.setItem('visitors', JSON.stringify(this.visitors));
+      };
+      sock.onclose = () => console.log('⚠️ WebSocket closed');
     }
   }
 }
