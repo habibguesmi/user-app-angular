@@ -29,6 +29,7 @@ export class VisitorCounterComponent implements OnInit, OnDestroy {
       sock.onmessage = (event: MessageEvent) => {
         try {
           const data = JSON.parse(event.data);
+          console.log('👥 Détails:', data.count, data.visitors);
           this.count = data.count;
         } catch (error) {
           console.error('Invalid message format', error);
