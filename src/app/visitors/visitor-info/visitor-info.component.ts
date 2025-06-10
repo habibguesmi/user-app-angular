@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-visitor-info',
@@ -8,10 +9,15 @@ import { Component, OnInit } from '@angular/core';
 export class VisitorInfoComponent implements OnInit {
   visitors: { ip: string; city: string; country: string }[] = [];
 
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+  
+
   ngOnInit(): void {
-    const data = localStorage.getItem('visitors');
-    if (data) {
-      this.visitors = JSON.parse(data);
+    if (isPlatformBrowser(this.platformId)) {
+      const data = localStorage.getItem('visitors');
+      if (data) {
+        this.visitors = JSON.parse(data);
+      }
     }
   }
 }

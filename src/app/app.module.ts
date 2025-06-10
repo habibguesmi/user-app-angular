@@ -55,8 +55,6 @@ import { VisitorInfoComponent } from './visitors/visitor-info/visitor-info.compo
     FormsModule,
     MatSelectModule,
     MatButtonModule,
-
-
   ],
   providers: [],
   bootstrap: [AppComponent]
