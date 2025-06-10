@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import * as SockJS from 'sockjs-client';
 import { WindowService } from '../../core/services/window.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-visitor-counter',
@@ -11,14 +12,12 @@ export class VisitorCounterComponent implements OnInit, OnDestroy {
   count = 0;
   socket: WebSocket | null = null;
 
-  constructor(private windowService: WindowService) {}
+  constructor(private windowService: WindowService, private router: Router) {}
 
   ngOnInit(): void {
     const win = this.windowService.nativeWindow;
 
     if (win) {
-      console.log('Window is available');
-
       const isLocalhost = win.location.hostname === 'localhost';
       const socketUrl = isLocalhost
         ? 'http://localhost:8080/ws/visitors'
@@ -29,8 +28,12 @@ export class VisitorCounterComponent implements OnInit, OnDestroy {
       sock.onmessage = (event: MessageEvent) => {
         try {
           const data = JSON.parse(event.data);
-          console.log('👥 Détails:', data.count, data.visitors);
           this.count = data.count;
+
+          // Save visitors list in localStorage
+          if (data.visitors) {
+            localStorage.setItem('visitors', JSON.stringify(data.visitors));
+          }
         } catch (error) {
           console.error('Invalid message format', error);
         }
@@ -41,12 +44,14 @@ export class VisitorCounterComponent implements OnInit, OnDestroy {
       };
 
       this.socket = sock as unknown as WebSocket;
-    } else {
-      console.log('SSR mode - window is not available');
     }
   }
 
   ngOnDestroy(): void {
     this.socket?.close();
+  }
+
+  goToVisitorInfo(): void {
+    this.router.navigate(['/visitor-info']);
   }
 }
