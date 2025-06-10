@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import * as SockJS from 'sockjs-client';
-import { WindowService } from '../core/services/window.service';
+import { WindowService } from '../../core/services/window.service';
 
 @Component({
   selector: 'app-visitor-counter',

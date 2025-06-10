@@ -1,0 +1,9 @@
+<div class="visitor-info">
+  <h3>🌍 Détails des visiteurs</h3>
+  <p *ngIf="!visitors.length">Aucun visiteur connecté.</p>
+  <ul *ngIf="visitors.length">
+    <li *ngFor="let v of visitors">
+      IP: {{ v.ip }} — {{ v.city }}, {{ v.country }}
+    </li>
+  </ul>
+</div>

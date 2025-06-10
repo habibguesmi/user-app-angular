@@ -27,7 +27,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
-import { VisitorCounterComponent } from './visitor-counter/visitor-counter.component';
+import { VisitorCounterComponent } from './visitors/visitor-counter/visitor-counter.component';
+import { VisitorInfoComponent } from './visitors/visitor-info/visitor-info.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { VisitorCounterComponent } from './visitor-counter/visitor-counter.compo
     AboutComponent,
     ConfirmDialogComponent,
     VisitorCounterComponent,
+    VisitorInfoComponent,
   ],
   imports: [
     BrowserModule,

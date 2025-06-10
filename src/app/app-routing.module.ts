@@ -4,6 +4,7 @@ import { HomeComponent } from './components/home/home.component';
 import { AddUserComponent } from './components/add-user/add-user.component';
 import { UserListComponent } from './components/user-list/user-list.component';
 import { AboutComponent } from './components/about/about.component';
+import { VisitorInfoComponent } from './visitors/visitor-info/visitor-info.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -11,6 +12,7 @@ const routes: Routes = [
   { path: 'add-user', component: AddUserComponent },
   { path: 'edit-user/:id', component: AddUserComponent },
   { path: 'user-list', component: UserListComponent },
+  { path: 'visitor-info', component: VisitorInfoComponent },
 ];
 
 @NgModule({
