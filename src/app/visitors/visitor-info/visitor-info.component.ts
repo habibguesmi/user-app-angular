@@ -1,5 +1,4 @@
-import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-visitor-info',
@@ -9,14 +8,13 @@ import { isPlatformBrowser } from '@angular/common';
 export class VisitorInfoComponent implements OnInit {
   visitors: { ip: string; city: string; country: string }[] = [];
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
-  
-
   ngOnInit(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      const data = localStorage.getItem('visitors');
-      if (data) {
-        this.visitors = JSON.parse(data);
+    const stored = localStorage.getItem('visitors');
+    if (stored) {
+      try {
+        this.visitors = JSON.parse(stored);
+      } catch (e) {
+        console.error('Erreur de parsing localStorage.visitors:', e);
       }
     }
   }
