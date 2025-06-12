@@ -1,9 +1,36 @@
-<div class="visitor-info">
-  <h3>🌍 Détails des visiteurs</h3>
-  <p *ngIf="!visitors.length">Aucun visiteur connecté.</p>
-  <ul *ngIf="visitors.length">
-    <li *ngFor="let v of visitors; let i = index">
-      {{ i + 1 }} - IP: {{ v.ip }} — {{ v.city }}, {{ v.country }}
-    </li>
-  </ul>
+<div class="container">
+  <h2>🌍 Visiteurs en ligne : {{ visitorCount }}</h2>
+
+  <mat-form-field appearance="outline" class="search">
+    <mat-label>Filtrer par pays ou ville</mat-label>
+    <input matInput [(ngModel)]="searchTerm" (input)="updateFiltered()" />
+  </mat-form-field>
+
+  <table
+    mat-table
+    [dataSource]="filteredVisitors"
+    class="mat-elevation-z2"
+    style="width: 100%"
+  >
+    <ng-container matColumnDef="ip">
+      <th mat-header-cell *matHeaderCellDef>IP</th>
+      <td mat-cell *matCellDef="let v">{{ v.ip }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="city">
+      <th mat-header-cell *matHeaderCellDef>Ville</th>
+      <td mat-cell *matCellDef="let v">{{ v.city }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="country">
+      <th mat-header-cell *matHeaderCellDef>Pays</th>
+      <td mat-cell *matCellDef="let v">
+        <span class="flag-emoji">{{ getFlagEmoji(v.country) }}</span>
+        {{ v.country }}
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="['ip', 'city', 'country']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['ip', 'city', 'country']"></tr>
+  </table>
 </div>

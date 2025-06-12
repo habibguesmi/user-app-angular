@@ -29,6 +29,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { VisitorCounterComponent } from './visitors/visitor-counter/visitor-counter.component';
 import { VisitorInfoComponent } from './visitors/visitor-info/visitor-info.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+
+import { NgChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [
@@ -55,6 +60,10 @@ import { VisitorInfoComponent } from './visitors/visitor-info/visitor-info.compo
     FormsModule,
     MatSelectModule,
     MatButtonModule,
+    MatTableModule,
+    MatInputModule,
+    MatFormFieldModule,
+    NgChartsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
