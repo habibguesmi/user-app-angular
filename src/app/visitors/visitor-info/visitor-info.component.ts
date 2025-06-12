@@ -68,6 +68,33 @@ export class VisitorInfoComponent implements OnInit {
       );
     }
   }
+  getFlagUrl(countryName: string): string | null {
+    const nameToCode: { [key: string]: string } = {
+      'France': 'fr',
+      'United States': 'us',
+      'Germany': 'de',
+      'Spain': 'es',
+      'Italy': 'it',
+      'Canada': 'ca',
+      'Morocco': 'ma',
+      'Belgium': 'be',
+      'Tunisia': 'tn',
+      'Algeria': 'dz',
+      'Portugal': 'pt',
+      'Netherlands': 'nl',
+      'Switzerland': 'ch',
+      'United Kingdom': 'gb',
+      'Russia': 'ru',
+      'China': 'cn',
+      'Japan': 'jp',
+      'South Korea': 'kr',
+      'India': 'in'
+    };
+  
+    const code = nameToCode[countryName];
+    return code ? `https://flagcdn.com/24x18/${code}.png` : null;
+  }
+  
 
   getFlagEmoji(countryName: string): string {
     const overrides: { [key: string]: string } = {

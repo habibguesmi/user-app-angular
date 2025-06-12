@@ -56,3 +56,19 @@
     margin-right: 0.5em;
     vertical-align: middle;
 }
+
+.flag-icon {
+    width: 24px;
+    height: 18px;
+    margin-right: 8px;
+    vertical-align: middle;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    object-fit: cover;
+}
+
+.no-flag {
+    margin-right: 8px;
+    font-size: 1.2em;
+    vertical-align: middle;
+}
