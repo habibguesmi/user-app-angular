@@ -49,7 +49,6 @@ export class VisitorInfoComponent implements OnInit {
         const data = JSON.parse(event.data);
         this.visitorCount = data.count;
 
-        // Exclure IPv6 si besoin
         this.visitors = data.visitors.filter((v: { ip: string }) => !v.ip.includes(':'));
         this.updateFiltered();
 
@@ -70,25 +69,37 @@ export class VisitorInfoComponent implements OnInit {
     }
   }
 
-  // Convertit nom pays en emoji drapeau
   getFlagEmoji(countryName: string): string {
-    const countryCodes: { [key: string]: string } = {
-      'France': 'FR',
+    const overrides: { [key: string]: string } = {
       'United States': 'US',
-      'Germany': 'DE',
-      'Spain': 'ES',
-      'Italy': 'IT',
+      'United Kingdom': 'GB',
+      'South Korea': 'KR',
+      'North Korea': 'KP',
+      'Russia': 'RU',
       'Inconnu': ''
-      // ajoute d’autres pays si besoin
     };
 
-    const code = countryCodes[countryName];
+    const fallbackMap: { [key: string]: string } = {
+      France: 'FR',
+      Germany: 'DE',
+      Spain: 'ES',
+      Italy: 'IT',
+      Canada: 'CA',
+      Morocco: 'MA',
+      Belgium: 'BE',
+      Tunisia: 'TN',
+      Algeria: 'DZ',
+      Portugal: 'PT',
+      Netherlands: 'NL',
+      Switzerland: 'CH',
+      Australia: 'AU'
+    };
+
+    const code = overrides[countryName] || fallbackMap[countryName] || '';
     if (!code) return '';
 
     return code
       .toUpperCase()
-      .replace(/./g, char =>
-        String.fromCodePoint(127397 + char.charCodeAt(0))
-      );
+      .replace(/./g, c => String.fromCodePoint(127397 + c.charCodeAt(0)));
   }
 }

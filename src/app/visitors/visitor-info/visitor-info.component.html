@@ -25,7 +25,10 @@
     <ng-container matColumnDef="country">
       <th mat-header-cell *matHeaderCellDef>Pays</th>
       <td mat-cell *matCellDef="let v">
-        <span class="flag-emoji">{{ getFlagEmoji(v.country) }}</span>
+        <span class="flag-emoji" *ngIf="getFlagEmoji(v.country); else noFlag">
+          {{ getFlagEmoji(v.country) }}
+        </span>
+        <ng-template #noFlag>🌐</ng-template>
         {{ v.country }}
       </td>
     </ng-container>
