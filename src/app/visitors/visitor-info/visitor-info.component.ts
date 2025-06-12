@@ -7,10 +7,19 @@ import * as SockJS from 'sockjs-client';
   styleUrls: ['./visitor-info.component.scss']
 })
 export class VisitorInfoComponent implements OnInit {
+  visitorId!: string;
   visitors: { ip: string; city: string; country: string }[] = [];
   visitorCount = 0;
 
   ngOnInit(): void {
+    // ✅ Génère un identifiant unique de visiteur s'il n'existe pas déjà
+let visitorId = localStorage.getItem('visitorId');
+if (!visitorId) {
+  visitorId = crypto.randomUUID(); // Nécessite un navigateur récent
+  localStorage.setItem('visitorId', visitorId);
+}
+this.visitorId = visitorId; // Stocke pour utilisation WebSocket
+
     const stored = localStorage.getItem('visitors');
     if (stored) {
       try {
@@ -28,7 +37,11 @@ export class VisitorInfoComponent implements OnInit {
 
       const sock = new SockJS(socketUrl);
 
-      sock.onopen = () => console.log('✅ WebSocket connected');
+      sock.onopen = () => {
+        console.log('✅ WebSocket connected');
+        // ✅ Envoie l'identifiant unique dès l'ouverture
+        sock.send(JSON.stringify({ type: 'init', visitorId: this.visitorId }));
+      };
       sock.onmessage = (event: MessageEvent) => {
         const data = JSON.parse(event.data);
         this.visitorCount = data.count;
