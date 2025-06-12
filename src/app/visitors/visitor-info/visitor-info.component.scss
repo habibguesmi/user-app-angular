@@ -72,3 +72,22 @@
     font-size: 1.2em;
     vertical-align: middle;
 }
+
+.loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 3rem;
+    color: #555;
+    font-size: 1rem;
+    gap: 1rem;
+}
+
+.flag {
+    width: 24px;
+    height: 18px;
+    margin-right: 0.5rem;
+    vertical-align: middle;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}

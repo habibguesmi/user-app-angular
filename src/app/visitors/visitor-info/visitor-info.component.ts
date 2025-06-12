@@ -12,9 +12,9 @@ export class VisitorInfoComponent implements OnInit {
   visitorCount = 0;
   searchTerm = '';
   filteredVisitors: { ip: string; city: string; country: string }[] = [];
+  dataReady = false;
 
   ngOnInit(): void {
-    // Génère un identifiant unique s'il n'existe pas
     let visitorId = localStorage.getItem('visitorId');
     if (!visitorId) {
       visitorId = crypto.randomUUID();
@@ -26,12 +26,11 @@ export class VisitorInfoComponent implements OnInit {
     if (stored) {
       try {
         this.visitors = JSON.parse(stored);
+        this.updateFiltered();
       } catch (e) {
-        console.error('Erreur de parsing localStorage.visitors:', e);
+        console.error('Erreur parsing localStorage.visitors:', e);
       }
     }
-
-    this.updateFiltered();
 
     if (typeof window !== 'undefined') {
       const isLocalhost = window.location.hostname === 'localhost';
@@ -42,19 +41,20 @@ export class VisitorInfoComponent implements OnInit {
       const sock = new SockJS(socketUrl);
 
       sock.onopen = () => {
-        console.log('✅ WebSocket connected');
         sock.send(JSON.stringify({ type: 'init', visitorId: this.visitorId }));
       };
+
       sock.onmessage = (event: MessageEvent) => {
         const data = JSON.parse(event.data);
         this.visitorCount = data.count;
-
         this.visitors = data.visitors.filter((v: { ip: string }) => !v.ip.includes(':'));
         this.updateFiltered();
 
         localStorage.setItem('visitors', JSON.stringify(this.visitors));
+        this.dataReady = true;
       };
-      sock.onclose = () => console.log('⚠️ WebSocket closed');
+
+      sock.onclose = () => console.log('WebSocket fermé');
     }
   }
 
@@ -68,8 +68,9 @@ export class VisitorInfoComponent implements OnInit {
       );
     }
   }
-  getFlagUrl(countryName: string): string | null {
-    const nameToCode: { [key: string]: string } = {
+
+  getFlagUrl(countryName: string): string {
+    const countryCodes: { [key: string]: string } = {
       'France': 'fr',
       'United States': 'us',
       'Germany': 'de',
@@ -77,56 +78,9 @@ export class VisitorInfoComponent implements OnInit {
       'Italy': 'it',
       'Canada': 'ca',
       'Morocco': 'ma',
-      'Belgium': 'be',
-      'Tunisia': 'tn',
-      'Algeria': 'dz',
-      'Portugal': 'pt',
-      'Netherlands': 'nl',
-      'Switzerland': 'ch',
-      'United Kingdom': 'gb',
-      'Russia': 'ru',
-      'China': 'cn',
-      'Japan': 'jp',
-      'South Korea': 'kr',
-      'India': 'in'
-    };
-  
-    const code = nameToCode[countryName];
-    return code ? `https://flagcdn.com/24x18/${code}.png` : null;
-  }
-  
-
-  getFlagEmoji(countryName: string): string {
-    const overrides: { [key: string]: string } = {
-      'United States': 'US',
-      'United Kingdom': 'GB',
-      'South Korea': 'KR',
-      'North Korea': 'KP',
-      'Russia': 'RU',
       'Inconnu': ''
     };
-
-    const fallbackMap: { [key: string]: string } = {
-      France: 'FR',
-      Germany: 'DE',
-      Spain: 'ES',
-      Italy: 'IT',
-      Canada: 'CA',
-      Morocco: 'MA',
-      Belgium: 'BE',
-      Tunisia: 'TN',
-      Algeria: 'DZ',
-      Portugal: 'PT',
-      Netherlands: 'NL',
-      Switzerland: 'CH',
-      Australia: 'AU'
-    };
-
-    const code = overrides[countryName] || fallbackMap[countryName] || '';
-    if (!code) return '';
-
-    return code
-      .toUpperCase()
-      .replace(/./g, c => String.fromCodePoint(127397 + c.charCodeAt(0)));
+    const code = countryCodes[countryName] || '';
+    return code ? `https://flagcdn.com/w40/${code}.png` : '';
   }
 }

@@ -1,12 +1,13 @@
 <div class="container">
-  <h2>🌍 Visiteurs en ligne : {{ visitorCount }}</h2>
+  <h2 *ngIf="dataReady">🌍 Visiteurs en ligne : {{ visitorCount }}</h2>
 
-  <mat-form-field appearance="outline" class="search">
+  <mat-form-field appearance="outline" class="search" *ngIf="dataReady">
     <mat-label>Filtrer par pays ou ville</mat-label>
     <input matInput [(ngModel)]="searchTerm" (input)="updateFiltered()" />
   </mat-form-field>
 
   <table
+    *ngIf="dataReady"
     mat-table
     [dataSource]="filteredVisitors"
     class="mat-elevation-z2"
@@ -26,14 +27,11 @@
       <th mat-header-cell *matHeaderCellDef>Pays</th>
       <td mat-cell *matCellDef="let v">
         <img
-          *ngIf="getFlagUrl(v.country); else noFlag"
+          *ngIf="getFlagUrl(v.country)"
           [src]="getFlagUrl(v.country)"
-          [alt]="v.country"
-          class="flag-icon"
+          class="flag"
+          alt="{{ v.country }}"
         />
-        <ng-template #noFlag>
-          <span class="no-flag">🌐</span>
-        </ng-template>
         {{ v.country }}
       </td>
     </ng-container>
@@ -41,4 +39,9 @@
     <tr mat-header-row *matHeaderRowDef="['ip', 'city', 'country']"></tr>
     <tr mat-row *matRowDef="let row; columns: ['ip', 'city', 'country']"></tr>
   </table>
+
+  <div *ngIf="!dataReady" class="loading">
+    <mat-spinner diameter="40" color="primary"></mat-spinner>
+    <p>Chargement des visiteurs en cours...</p>
+  </div>
 </div>
