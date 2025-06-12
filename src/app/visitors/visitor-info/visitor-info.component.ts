@@ -53,6 +53,12 @@ export class VisitorInfoComponent implements OnInit {
         localStorage.setItem('visitors', JSON.stringify(this.visitors));
         this.dataReady = true;
       };
+      setTimeout(() => {
+        if (!this.dataReady && this.visitors.length > 0) {
+          console.warn('⏳ Timeout WebSocket — fallback aux données locales');
+          this.dataReady = true;
+        }
+      }, 5000); // 5 secondes
 
       sock.onclose = () => console.log('WebSocket fermé');
     }
